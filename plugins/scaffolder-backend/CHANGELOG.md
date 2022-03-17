@@ -1,5 +1,12 @@
 # @backstage/plugin-scaffolder-backend
 
+## 1.0.1-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-backend@1.0.1-next.0
+
 ## 1.0.0
 
 ### Major Changes

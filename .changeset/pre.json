@@ -139,5 +139,7 @@
     "@backstage/plugin-user-settings": "0.4.2",
     "@backstage/plugin-xcmetrics": "0.2.23"
   },
-  "changesets": []
+  "changesets": [
+    "large-coins-arrive"
+  ]
 }
