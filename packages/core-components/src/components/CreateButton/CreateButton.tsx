@@ -18,7 +18,7 @@ import { BackstageTheme } from '@backstage/theme';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Link as RouterLink, LinkProps } from 'react-router-dom';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
 
@@ -28,6 +28,7 @@ import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
  * @public
  */
 export type CreateButtonProps = {
+  customStyles?: CSSProperties;
   title: string;
 } & Partial<Pick<LinkProps, 'to'>>;
 
@@ -37,7 +38,7 @@ export type CreateButtonProps = {
  * @public
  */
 export function CreateButton(props: CreateButtonProps) {
-  const { title, to } = props;
+  const { customStyles, title, to } = props;
   const isXSScreen = useMediaQuery<BackstageTheme>(theme =>
     theme.breakpoints.down('xs'),
   );
@@ -52,12 +53,19 @@ export function CreateButton(props: CreateButtonProps) {
       color="primary"
       title={title}
       size="small"
+      style={customStyles}
       to={to}
     >
       <AddCircleOutline />
     </IconButton>
   ) : (
-    <Button component={RouterLink} variant="contained" color="primary" to={to}>
+    <Button
+      color="primary"
+      component={RouterLink}
+      style={customStyles}
+      to={to}
+      variant="contained"
+    >
       {title}
     </Button>
   );
