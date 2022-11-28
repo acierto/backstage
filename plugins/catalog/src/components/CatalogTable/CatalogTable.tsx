@@ -27,6 +27,7 @@ import {
   WarningPanel,
 } from '@backstage/core-components';
 import {
+  EntityTextFilter,
   getEntityRelations,
   humanizeEntityRef,
   useEntityList,
@@ -39,7 +40,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
 import { capitalize } from 'lodash';
-import React, { ReactNode, useMemo } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { columnFactories } from './columns';
 import { CatalogTableRow } from './types';
 
@@ -66,7 +67,7 @@ const YellowStar = withStyles({
 export const CatalogTable = (props: CatalogTableProps) => {
   const { columns, actions, tableOptions, subtitle, emptyContent } = props;
   const { isStarredEntity, toggleStarredEntity } = useStarredEntities();
-  const { loading, error, entities, filters } = useEntityList();
+  const { loading, error, entities, filters, updateFilters } = useEntityList();
 
   const defaultColumns: TableColumn<CatalogTableRow>[] = useMemo(() => {
     return [
@@ -106,6 +107,19 @@ export const CatalogTable = (props: CatalogTableProps) => {
   const showTypeColumn = filters.type === undefined;
   // TODO(timbonicus): remove the title from the CatalogTable once using EntitySearchBar
   const titlePreamble = capitalize(filters.user?.value ?? 'all');
+
+  const [search, setSearch] = useState('');
+
+  const onTableToolbarSearch = async (text: string) => {
+    updateFilters({
+      text: text.length ? new EntityTextFilter(text) : undefined,
+    });
+    setSearch(text);
+  };
+
+  useEffect(() => {
+    setSearch(filters.text?.value ?? '');
+  }, [setSearch, filters]);
 
   if (error) {
     return (
@@ -220,6 +234,7 @@ export const CatalogTable = (props: CatalogTableProps) => {
         pageSize: 20,
         actionsColumnIndex: -1,
         loadingType: 'linear',
+        searchText: search,
         showEmptyDataSourceMessage: !loading,
         padding: 'dense',
         pageSizeOptions: [20, 50, 100],
@@ -229,6 +244,7 @@ export const CatalogTable = (props: CatalogTableProps) => {
       data={rows}
       actions={actions || defaultActions}
       subtitle={subtitle}
+      setTableToolbarSearch={onTableToolbarSearch}
       emptyContent={emptyContent}
     />
   );

@@ -21,7 +21,7 @@ import sortBy from 'lodash/sortBy';
 import { useApi } from '@backstage/core-plugin-api';
 import { catalogApiRef } from '../api';
 import { useEntityList } from './useEntityListProvider';
-import { EntityTypeFilter } from '../filters';
+import { EntityTextFilter, EntityTypeFilter } from '../filters';
 
 /**
  * A hook built on top of `useEntityList` for enabling selection of valid `spec.type` values
@@ -38,7 +38,7 @@ export function useEntityTypeFilter(): {
   const catalogApi = useApi(catalogApiRef);
   const {
     filters: { kind: kindFilter, type: typeFilter },
-    queryParameters: { type: typeParameter },
+    queryParameters: { type: typeParameter, text },
     updateFilters,
   } = useEntityList();
 
@@ -46,6 +46,24 @@ export function useEntityTypeFilter(): {
     () => [typeParameter].flat().filter(Boolean) as string[],
     [typeParameter],
   );
+
+  useEffect(() => {
+    if (!text) {
+      updateFilters({
+        text: undefined,
+      });
+    } else if (Array.isArray(text)) {
+      text.forEach(textItem => {
+        updateFilters({
+          text: new EntityTextFilter(textItem),
+        });
+      });
+    } else {
+      updateFilters({
+        text: new EntityTextFilter(text),
+      });
+    }
+  }, [updateFilters, text]);
 
   const [selectedTypes, setSelectedTypes] = useState(
     flattenedQueryTypes.length

@@ -237,6 +237,7 @@ export interface TableProps<T extends object = {}>
   initialState?: TableState;
   emptyContent?: ReactNode;
   onStateChange?: (state: TableState) => any;
+  setTableToolbarSearch?: (value: string) => void;
 }
 
 export function TableToolbar(toolbarProps: {
@@ -246,21 +247,24 @@ export function TableToolbar(toolbarProps: {
   toggleFilters: () => void;
   hasFilters: boolean;
   selectedFiltersLength: number;
+  setTableToolbarSearch?: (value: string) => void;
 }) {
   const {
     toolbarRef,
     setSearch,
     hasFilters,
     selectedFiltersLength,
+    setTableToolbarSearch,
     toggleFilters,
   } = toolbarProps;
   const filtersClasses = useFilterStyles();
   const onSearchChanged = useCallback(
     (searchText: string) => {
+      setTableToolbarSearch?.(searchText);
       toolbarProps.onSearchChanged(searchText);
       setSearch(searchText);
     },
-    [toolbarProps, setSearch],
+    [setSearch, setTableToolbarSearch, toolbarProps],
   );
 
   if (hasFilters) {
@@ -307,6 +311,7 @@ export function Table<T extends object = {}>(props: TableProps<T>) {
     emptyContent,
     onStateChange,
     components,
+    setTableToolbarSearch,
     ...restProps
   } = props;
   const tableClasses = useTableStyles();
@@ -451,17 +456,27 @@ export function Table<T extends object = {}>(props: TableProps<T>) {
   const hasFilters = !!filters?.length;
   const Toolbar = useCallback(
     toolbarProps => {
+      const allProps = { ...toolbarProps, searchText: options?.searchText };
       return (
         <TableToolbar
-          setSearch={setSearch}
           hasFilters={hasFilters}
+          searchText={options?.searchText}
           selectedFiltersLength={selectedFiltersLength}
+          setSearch={setSearch}
+          setTableToolbarSearch={setTableToolbarSearch}
           toggleFilters={toggleFilters}
-          {...toolbarProps}
+          {...allProps}
         />
       );
     },
-    [toggleFilters, hasFilters, selectedFiltersLength, setSearch],
+    [
+      toggleFilters,
+      hasFilters,
+      options,
+      selectedFiltersLength,
+      setSearch,
+      setTableToolbarSearch,
+    ],
   );
 
   const hasNoRows = typeof data !== 'function' && data.length === 0;

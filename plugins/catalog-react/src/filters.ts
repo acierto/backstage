@@ -19,7 +19,7 @@ import {
   Entity,
   RELATION_OWNED_BY,
 } from '@backstage/catalog-model';
-import { humanizeEntityRef } from './components/EntityRefLink';
+import { humanizeEntityRef } from './components';
 import { EntityFilter, UserListFilterKind } from './types';
 import { getEntityRelations } from './utils';
 
@@ -110,6 +110,10 @@ export class EntityTextFilter implements EntityFilter {
       .flat()
       .filter((m): m is string => Boolean(m))
       .map(m => m.toLocaleUpperCase('en-US'));
+  }
+
+  toQueryValue(): string[] {
+    return [this.value];
   }
 }
 
