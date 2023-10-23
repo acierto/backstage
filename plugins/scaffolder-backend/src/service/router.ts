@@ -281,7 +281,7 @@ export async function createRouter(
 
   const actionRegistry = new TemplateActionRegistry();
 
-  const workers = [];
+  const workers: TaskWorker[] = [];
   if (concurrentTasksLimit !== 0) {
     for (let i = 0; i < (taskWorkers || 1); i++) {
       const worker = await TaskWorker.create({
@@ -465,7 +465,7 @@ export async function createRouter(
       res.status(201).json({ id: result.taskId });
     })
     .get('/v2/tasks/wait', async (req, res) => {
-      const { retries } = req.params ?? {};
+      const { retries } = req.params ?? { retries: 360 };
       await retry<boolean>(
         () => {
           return workers.map(worker => worker.hasPendingTasks()).some(Boolean);
