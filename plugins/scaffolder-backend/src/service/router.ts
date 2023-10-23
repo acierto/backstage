@@ -465,7 +465,9 @@ export async function createRouter(
       res.status(201).json({ id: result.taskId });
     })
     .get('/v2/tasks/wait', async (req, res) => {
-      const { retries } = req.params ?? { retries: 360 };
+      const { retries } = (req.params ?? { retries: 360 }) as {
+        retries: number;
+      };
       await retry<boolean>(
         () => {
           return workers.map(worker => worker.hasPendingTasks()).some(Boolean);
