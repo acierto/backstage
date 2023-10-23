@@ -108,6 +108,30 @@ export async function findTemplate(options: {
   return template as TemplateEntityV1beta3;
 }
 
-export type TemplateTransform = (
-  template: TemplateEntityV1beta3,
-) => TemplateEntityV1beta3;
+export const wait = async (ms: number) =>
+  new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+
+export const retry = async <T>(
+  fn: () => T,
+  condition: (input: T) => boolean,
+  rejectMessage: string,
+  retries = 180,
+  interval = 10000,
+): Promise<T> => {
+  const retryAgain = async () => {
+    if (retries < 0) {
+      return Promise.reject(new Error(rejectMessage));
+    }
+    await wait(interval);
+    return retry(fn, condition, rejectMessage, retries - 1, interval);
+  };
+
+  const result = await fn();
+  if (condition(result)) {
+    return Promise.resolve(result);
+  }
+
+  return retryAgain();
+};

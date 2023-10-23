@@ -134,6 +134,10 @@ export class TaskWorker {
     });
   }
 
+  public hasPendingTasks(): boolean {
+    return this.taskQueue.size > 0;
+  }
+
   async runOneTask(task: TaskContext) {
     try {
       if (task.spec.apiVersion !== 'scaffolder.backstage.io/v1beta3') {

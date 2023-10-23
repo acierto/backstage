@@ -58,7 +58,12 @@ import {
 } from '../scaffolder';
 import { createDryRunner } from '../scaffolder/dryrun';
 import { StorageTaskBroker } from '../scaffolder/tasks/StorageTaskBroker';
-import { findTemplate, getEntityBaseUrl, getWorkingDirectory } from './helpers';
+import {
+  findTemplate,
+  getEntityBaseUrl,
+  getWorkingDirectory,
+  retry,
+} from './helpers';
 import {
   IdentityApi,
   IdentityApiGetIdentityRequest,
@@ -458,6 +463,17 @@ export async function createRouter(
       });
 
       res.status(201).json({ id: result.taskId });
+    })
+    .get('/v2/tasks/wait', async (req, res) => {
+      const { retries } = req.params ?? {};
+      await retry<boolean>(
+        () => workers.map(worker => worker.hasPendingTasks()).some(Boolean),
+        hasPendingTasks => hasPendingTasks,
+        `Timeout of ${
+          (retries * 10) / 60
+        } minutes has reached for in progress tasks.`,
+        retries,
+      );
     })
     .get('/v2/tasks', async (req, res) => {
       const [userEntityRef] = [req.query.createdBy].flat();
