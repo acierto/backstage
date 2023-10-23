@@ -117,15 +117,24 @@ export const retry = async <T>(
   fn: () => T,
   condition: (input: T) => boolean,
   rejectMessage: string,
-  retries = 180,
-  interval = 10000,
+  logMessageFn: () => void,
+  retries = 360,
+  interval = 5000,
 ): Promise<T> => {
   const retryAgain = async () => {
     if (retries < 0) {
       return Promise.reject(new Error(rejectMessage));
     }
+    logMessageFn();
     await wait(interval);
-    return retry(fn, condition, rejectMessage, retries - 1, interval);
+    return retry(
+      fn,
+      condition,
+      rejectMessage,
+      logMessageFn,
+      retries - 1,
+      interval,
+    );
   };
 
   const result = await fn();

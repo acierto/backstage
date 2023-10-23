@@ -135,7 +135,7 @@ export class TaskWorker {
   }
 
   public hasPendingTasks(): boolean {
-    return this.taskQueue.size > 0;
+    return this.taskQueue.pending > 0;
   }
 
   async runOneTask(task: TaskContext) {

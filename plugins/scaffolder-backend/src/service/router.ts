@@ -467,13 +467,17 @@ export async function createRouter(
     .get('/v2/tasks/wait', async (req, res) => {
       const { retries } = req.params ?? {};
       await retry<boolean>(
-        () => workers.map(worker => worker.hasPendingTasks()).some(Boolean),
-        hasPendingTasks => hasPendingTasks,
+        () => {
+          return workers.map(worker => worker.hasPendingTasks()).some(Boolean);
+        },
+        hasPendingTasks => !hasPendingTasks,
         `Timeout of ${
-          (retries * 10) / 60
+          (retries * 5) / 60
         } minutes has reached for in progress tasks.`,
+        () => logger.info('Waiting for on going tasks to complete...'),
         retries,
       );
+      res.status(200).json({ status: 'ok' });
     })
     .get('/v2/tasks', async (req, res) => {
       const [userEntityRef] = [req.query.createdBy].flat();
