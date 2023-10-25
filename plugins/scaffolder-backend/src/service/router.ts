@@ -24,10 +24,10 @@ import {
   stringifyEntityRef,
   UserEntity,
 } from '@backstage/catalog-model';
-import { Config } from '@backstage/config';
+import { Config, readDurationFromConfig } from '@backstage/config';
 import { InputError, NotFoundError, stringifyError } from '@backstage/errors';
 import { ScmIntegrations } from '@backstage/integration';
-import { JsonObject, JsonValue } from '@backstage/types';
+import { HumanDuration, JsonObject, JsonValue } from '@backstage/types';
 import {
   TaskSpec,
   TemplateEntityV1beta3,
@@ -74,6 +74,7 @@ import {
   PermissionRule,
 } from '@backstage/plugin-permission-node';
 import { scaffolderActionRules, scaffolderTemplateRules } from './rules';
+import { Duration } from 'luxon';
 
 /**
  *
@@ -512,7 +513,7 @@ export async function createRouter(
       delete task.secrets;
       res.status(200).json(task);
     })
-    .post('/v2/tasks/cancel', async (req, res) => {
+    .post('/v2/tasks/cancel', async (_req, res) => {
       workers.forEach(worker => worker.cancelAllRunningTasks());
       res.status(200).json({ status: 'cancelled' });
     })

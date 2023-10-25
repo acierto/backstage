@@ -33,7 +33,7 @@ import {
   scaffolderTaskBrokerExtensionPoint,
   scaffolderTemplatingExtensionPoint,
 } from '@backstage/plugin-scaffolder-node/alpha';
-import { createBuiltinActions, DatabaseTaskStore } from './scaffolder';
+import { createBuiltinActions } from './scaffolder';
 import { createRouter } from './service/router';
 
 /**
