@@ -312,7 +312,7 @@ export class StorageTaskBroker implements TaskBroker {
     this.deferredDispatch = defer();
   }
 
-  async cancel(taskId: string) {
+  async cancel(taskId: string, forced?: boolean) {
     const { events } = await this.storage.listEvents({ taskId });
     const currentStepId =
       events.length > 0
@@ -322,13 +322,16 @@ export class StorageTaskBroker implements TaskBroker {
             .stepId
         : 0;
 
-    await this.storage.cancelTask?.({
-      taskId,
-      body: {
-        message: `Step ${currentStepId} has been cancelled.`,
-        stepId: currentStepId,
-        status: 'cancelled',
+    await this.storage.cancelTask?.(
+      {
+        taskId,
+        body: {
+          message: `Step ${currentStepId} has been cancelled.`,
+          stepId: currentStepId,
+          status: 'cancelled',
+        },
       },
-    });
+      forced,
+    );
   }
 }

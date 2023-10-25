@@ -49,7 +49,7 @@ export default async function createPlugin(
     }),
   ];
 
-  return await createRouter({
+  const { router } = await createRouter({
     logger: env.logger,
     config: env.config,
     database: env.database,
@@ -60,4 +60,5 @@ export default async function createPlugin(
     permissions: env.permissions,
     actions,
   });
+  return router;
 }

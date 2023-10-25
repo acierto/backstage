@@ -156,7 +156,7 @@ export type TaskStoreCreateTaskResult = {
  * @public
  */
 export interface TaskStore {
-  cancelTask?(options: TaskStoreEmitOptions): Promise<void>;
+  cancelTask?(options: TaskStoreEmitOptions, forced?: boolean): Promise<void>;
 
   createTask(
     options: TaskStoreCreateTaskOptions,

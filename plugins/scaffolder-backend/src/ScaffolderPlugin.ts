@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import fetch from 'node-fetch';
 import {
   createBackendPlugin,
   coreServices,
@@ -76,7 +75,6 @@ export const scaffolderPlugin = createBackendPlugin({
       deps: {
         logger: coreServices.logger,
         config: coreServices.rootConfig,
-        discovery: coreServices.discovery,
         lifecycle: coreServices.lifecycle,
         reader: coreServices.urlReader,
         permissions: coreServices.permissions,
@@ -87,7 +85,6 @@ export const scaffolderPlugin = createBackendPlugin({
       async init({
         logger,
         config,
-        discovery,
         lifecycle,
         reader,
         database,
@@ -109,20 +106,12 @@ export const scaffolderPlugin = createBackendPlugin({
           }),
         ];
 
-        lifecycle.addShutdownHook(async () => {
-          const baseUrl = await discovery.getBaseUrl('scaffolder');
-          const url = `${baseUrl}/v2/tasks/cancel`;
-          await fetch(url, {
-            method: 'POST',
-          });
-        });
-
         const actionIds = actions.map(action => action.id).join(', ');
         log.info(
           `Starting scaffolder with the following actions enabled ${actionIds}`,
         );
 
-        const router = await createRouter({
+        const { router, workers } = await createRouter({
           logger: log,
           config,
           database,
@@ -134,6 +123,12 @@ export const scaffolderPlugin = createBackendPlugin({
           additionalTemplateGlobals,
           permissions,
         });
+
+        lifecycle.addShutdownHook(async () => {
+          workers.forEach(worker => worker.cancelAllRunningTasks());
+          console.log('aas3223');
+        });
+
         httpRouter.use(router);
       },
     });

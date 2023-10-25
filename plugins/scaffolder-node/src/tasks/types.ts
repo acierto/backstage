@@ -127,7 +127,7 @@ export interface TaskContext {
  * @public
  */
 export interface TaskBroker {
-  cancel?(taskId: string): Promise<void>;
+  cancel?(taskId: string, forced?: boolean): Promise<void>;
 
   claim(): Promise<TaskContext>;
 

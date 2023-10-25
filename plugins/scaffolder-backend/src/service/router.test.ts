@@ -188,7 +188,7 @@ describe('createRouter', () => {
       jest.spyOn(taskBroker, 'event$');
       loggerSpy = jest.spyOn(logger, 'info');
 
-      const router = await createRouter({
+      const { router } = await createRouter({
         logger: logger,
         config: new ConfigReader({}),
         database: createDatabase(),
@@ -811,7 +811,7 @@ data: {"id":1,"taskId":"a-random-id","type":"completion","createdAt":"","body":{
         },
       );
 
-      const router = await createRouter({
+      const { router } = await createRouter({
         logger: logger,
         config: new ConfigReader({}),
         database: createDatabase(),

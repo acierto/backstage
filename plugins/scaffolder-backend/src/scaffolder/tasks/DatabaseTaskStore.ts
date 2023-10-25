@@ -451,6 +451,7 @@ export class DatabaseTaskStore implements TaskStore {
 
   async cancelTask(
     options: TaskStoreEmitOptions<{ message: string } & JsonObject>,
+    forced?: boolean,
   ): Promise<void> {
     const { taskId, body } = options;
     const serializedBody = JSON.stringify(body);
@@ -459,5 +460,12 @@ export class DatabaseTaskStore implements TaskStore {
       event_type: 'cancelled',
       body: serializedBody,
     });
+    if (forced) {
+      await this.db<RawDbTaskRow>('tasks')
+        .update({
+          status: 'failed',
+        })
+        .where({ id: taskId });
+    }
   }
 }

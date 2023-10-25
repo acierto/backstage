@@ -124,8 +124,8 @@ export class TaskWorker {
           this.taskQueue.add(
             ({ signal }) => {
               this.runOneTask(task);
-              signal?.addEventListener('abort', () => {
-                this.options.taskBroker.cancel?.(taskId);
+              signal?.addEventListener('abort', async () => {
+                this.options.taskBroker.cancel?.(taskId, true);
               });
             },
             { signal: this.taskQueueAbortController.signal },
