@@ -212,6 +212,17 @@ function buildDefaultIdentityClient(options: RouterOptions): IdentityApi {
   };
 }
 
+const readDuration = (
+  config: Config,
+  key: string,
+  defaultValue: HumanDuration,
+) => {
+  if (config.has(key)) {
+    return readDurationFromConfig(config, { key });
+  }
+  return defaultValue;
+};
+
 /**
  * A method to create a router for the scaffolder backend plugin.
  * @public
@@ -256,11 +267,21 @@ export async function createRouter(
     if (scheduler && databaseTaskStore.listStaleTasks) {
       await scheduler.scheduleTask({
         id: 'close_stale_tasks',
-        frequency: { cron: '*/5 * * * *' }, // every 5 minutes, also supports Duration
+        frequency: readDuration(
+          config,
+          'scaffolder.taskTimeoutReaperFrequency',
+          {
+            minutes: 5,
+          },
+        ),
         timeout: { minutes: 15 },
         fn: async () => {
           const { tasks } = await databaseTaskStore.listStaleTasks({
-            timeoutS: 86400,
+            timeoutS: Duration.fromObject(
+              readDuration(config, 'scaffolder.taskTimeout', {
+                hours: 24,
+              }),
+            ).as('seconds'),
           });
 
           for (const task of tasks) {
@@ -276,7 +297,7 @@ export async function createRouter(
 
   const actionRegistry = new TemplateActionRegistry();
 
-  const workers = [];
+  const workers: TaskWorker[] = [];
   if (concurrentTasksLimit !== 0) {
     for (let i = 0; i < (taskWorkers || 1); i++) {
       const worker = await TaskWorker.create({
@@ -490,6 +511,10 @@ export async function createRouter(
       // Do not disclose secrets
       delete task.secrets;
       res.status(200).json(task);
+    })
+    .post('/v2/tasks/cancel', async (req, res) => {
+      workers.forEach(worker => worker.cancelAllRunningTasks());
+      res.status(200).json({ status: 'cancelled' });
     })
     .post('/v2/tasks/:taskId/cancel', async (req, res) => {
       const { taskId } = req.params;

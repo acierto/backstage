@@ -15,7 +15,7 @@
  */
 
 import { TaskContext, TaskBroker, WorkflowRunner } from './types';
-import PQueue from 'p-queue';
+import PQueue, { AbortError } from 'p-queue';
 import { NunjucksWorkflowRunner } from './NunjucksWorkflowRunner';
 import { Logger } from 'winston';
 import { TemplateActionRegistry } from '../actions';
@@ -73,8 +73,10 @@ export type CreateWorkerOptions = {
  */
 export class TaskWorker {
   private taskQueue: PQueue;
+  private taskQueueAbortController: AbortController;
 
   private constructor(private readonly options: TaskWorkerOptions) {
+    this.taskQueueAbortController = new AbortController();
     this.taskQueue = new PQueue({
       concurrency: options.concurrentTasksLimit,
     });
@@ -116,9 +118,29 @@ export class TaskWorker {
       for (;;) {
         await this.onReadyToClaimTask();
         const task = await this.options.taskBroker.claim();
-        this.taskQueue.add(() => this.runOneTask(task));
+        const taskId = await task.getWorkspaceName();
+
+        try {
+          this.taskQueue.add(
+            ({ signal }) => {
+              this.runOneTask(task);
+              signal?.addEventListener('abort', () => {
+                this.options.taskBroker.cancel?.(taskId);
+              });
+            },
+            { signal: this.taskQueueAbortController.signal },
+          );
+        } catch (error) {
+          if (!(error instanceof AbortError)) {
+            throw error;
+          }
+        }
       }
     })();
+  }
+
+  cancelAllRunningTasks() {
+    this.taskQueueAbortController.abort();
   }
 
   protected onReadyToClaimTask(): Promise<void> {
