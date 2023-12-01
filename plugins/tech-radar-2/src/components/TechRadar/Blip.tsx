@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import { useTheme } from '@material-ui/core';
 
@@ -47,7 +47,7 @@ export const GoldenTechBlip = ({ inactive }: GoldenTechBlipProps) => {
   );
 };
 
-const IconWrapper: React.FC = ({ children }) => (
+const IconWrapper = ({ children }: { children: ReactElement }) => (
   <svg width="24" height="24" viewBox="-12 -12 24 24">
     {children}
   </svg>

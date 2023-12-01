@@ -130,7 +130,7 @@ export const packageVersions = {
   '@backstage/plugin-search-backend-module-techdocs':
     pluginSearchBackendModuleTechdocs,
   '@backstage/plugin-search-backend-node': pluginSearchBackendNode,
-  '@backstage/plugin-tech-radar': pluginTechRadar,
+  '@backstage/plugin-tech-radar-2': pluginTechRadar,
   '@backstage/plugin-techdocs': pluginTechdocs,
   '@backstage/plugin-techdocs-react': pluginTechdocsReact,
   '@backstage/plugin-techdocs-module-addons-contrib':

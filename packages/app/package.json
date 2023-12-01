@@ -76,7 +76,7 @@
     "@backstage/plugin-stack-overflow": "workspace:^",
     "@backstage/plugin-stackstorm": "workspace:^",
     "@backstage/plugin-tech-insights": "workspace:^",
-    "@backstage/plugin-tech-radar": "workspace:^",
+    "@backstage/plugin-tech-radar-2": "workspace:^",
     "@backstage/plugin-techdocs": "workspace:^",
     "@backstage/plugin-techdocs-module-addons-contrib": "workspace:^",
     "@backstage/plugin-techdocs-react": "workspace:^",

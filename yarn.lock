@@ -9576,7 +9576,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@backstage/plugin-tech-radar-2@workspace:plugins/tech-radar-2":
+"@backstage/plugin-tech-radar-2@workspace:^, @backstage/plugin-tech-radar-2@workspace:plugins/tech-radar-2":
   version: 0.0.0-use.local
   resolution: "@backstage/plugin-tech-radar-2@workspace:plugins/tech-radar-2"
   dependencies:
@@ -27430,7 +27430,7 @@ __metadata:
     "@backstage/plugin-stack-overflow": "workspace:^"
     "@backstage/plugin-stackstorm": "workspace:^"
     "@backstage/plugin-tech-insights": "workspace:^"
-    "@backstage/plugin-tech-radar": "workspace:^"
+    "@backstage/plugin-tech-radar-2": "workspace:^"
     "@backstage/plugin-techdocs": "workspace:^"
     "@backstage/plugin-techdocs-module-addons-contrib": "workspace:^"
     "@backstage/plugin-techdocs-react": "workspace:^"
@@ -41209,17 +41209,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"screenfull@npm:^5.0.0":
+"screenfull@npm:^5.0.0, screenfull@npm:^5.1.0":
   version: 5.2.0
   resolution: "screenfull@npm:5.2.0"
   checksum: 21eae33b780eb4679ea0ea2d14734b11168cf35049c45a2bf24ddeb39c67a788e7a8fb46d8b61ca6d8367fd67ce9dd4fc8bfe476489249c7189c2a79cf83f51a
-  languageName: node
-  linkType: hard
-
-"screenfull@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "screenfull@npm:5.1.0"
-  checksum: e8ab486ba2310055aeabd84d8f76f1c9e729669942a4b1bdd675131333076ac9ee6655fb41c2507de3be93865e120cf3641e5ff636090f9e2458170827e650c7
   languageName: node
   linkType: hard
 

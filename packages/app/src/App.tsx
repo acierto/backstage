@@ -71,7 +71,7 @@ import {
   ScaffolderLayouts,
 } from '@backstage/plugin-scaffolder-react';
 import { SearchPage } from '@backstage/plugin-search';
-import { TechRadarPage } from '@backstage/plugin-tech-radar';
+import { TechRadarPage } from '@backstage/plugin-tech-radar-2';
 import {
   TechDocsIndexPage,
   TechDocsReaderPage,
@@ -284,10 +284,7 @@ const routes = (
       </Route>
     </FeatureFlagged>
     <Route path="/explore" element={<ExplorePage />} />
-    <Route
-      path="/tech-radar"
-      element={<TechRadarPage width={1500} height={800} />}
-    />
+    <Route path="/tech-radar" element={<TechRadarPage />} />
     {
       /* HIGHLY EXPERIMENTAL. DO NOT USE THIS IN YOUR APP */ extensionTree?.getRootRoutes() ??
         null
