@@ -308,6 +308,7 @@ export function createPublishGithubAction(options: {
       ctx.output('commitHash', commitResult?.commitHash);
       ctx.output('remoteUrl', remoteUrl);
       ctx.output('repoContentsUrl', repoContentsUrl);
+      ctx.output('idempotent', true);
     },
   });
 }
