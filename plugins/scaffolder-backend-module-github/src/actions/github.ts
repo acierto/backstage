@@ -34,6 +34,12 @@ import * as inputProps from './inputProperties';
 import * as outputProps from './outputProperties';
 import { examples } from './github.examples';
 
+const DISABLE_CACHE = {
+  headers: {
+    'If-None-Match': '',
+  },
+} as const;
+
 /**
  * Creates a new action that initializes a git repository of the content in the workspace
  * and publishes it to GitHub.
@@ -219,6 +225,29 @@ export function createPublishGithubAction(options: {
 
       if (!owner) {
         throw new InputError('Invalid repository owner provided in repoUrl');
+      }
+
+      try {
+        const { data: repository } = await client.rest.repos.get({
+          owner,
+          repo,
+          ...DISABLE_CACHE,
+        });
+        const remoteUrl = repository.clone_url;
+        const repoContentsUrl = `${repository.html_url}/blob/${defaultBranch}`;
+
+        const commit = await client.rest.repos.getCommit({
+          owner,
+          repo,
+          ref: defaultBranch,
+        });
+
+        ctx.output('commitHash', commit.data.sha);
+        ctx.output('remoteUrl', remoteUrl);
+        ctx.output('repoContentsUrl', repoContentsUrl);
+        return;
+      } catch (_err) {
+        // ignore
       }
 
       const newRepo = await createGithubRepoWithCollaboratorsAndTopics(
