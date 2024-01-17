@@ -31,6 +31,7 @@ import {
 import * as inputProps from './inputProperties';
 import * as outputProps from './outputProperties';
 import { examples } from './githubRepoCreate.examples';
+import { DISABLE_CACHE } from './constants';
 
 /**
  * Creates a new action that initializes a git repository
@@ -182,6 +183,21 @@ export function createGithubRepoCreateAction(options: {
         throw new InputError('Invalid repository owner provided in repoUrl');
       }
 
+      try {
+        const { data: repository } = await client.rest.repos.get({
+          owner,
+          repo,
+          ...DISABLE_CACHE,
+        });
+        const remoteUrl = repository.clone_url;
+
+        ctx.output('remoteUrl', remoteUrl);
+        ctx.output('idempotent', true);
+        return;
+      } catch (_err) {
+        // ignore
+      }
+
       const newRepo = await createGithubRepoWithCollaboratorsAndTopics(
         client,
         repo,
@@ -208,6 +224,7 @@ export function createGithubRepoCreateAction(options: {
       );
 
       ctx.output('remoteUrl', newRepo.clone_url);
+      ctx.output('idempotent', true);
     },
   });
 }

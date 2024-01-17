@@ -156,6 +156,7 @@ export function createGithubDeployKeyAction(options: {
       });
 
       ctx.output('privateKeySecretName', privateKeySecretName);
+      ctx.output('idempotent', true);
     },
   });
 }

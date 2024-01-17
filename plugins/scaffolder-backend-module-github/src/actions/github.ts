@@ -33,12 +33,7 @@ import {
 import * as inputProps from './inputProperties';
 import * as outputProps from './outputProperties';
 import { examples } from './github.examples';
-
-const DISABLE_CACHE = {
-  headers: {
-    'If-None-Match': '',
-  },
-} as const;
+import { DISABLE_CACHE } from './constants';
 
 /**
  * Creates a new action that initializes a git repository of the content in the workspace
@@ -245,6 +240,7 @@ export function createPublishGithubAction(options: {
         ctx.output('commitHash', commit.data.sha);
         ctx.output('remoteUrl', remoteUrl);
         ctx.output('repoContentsUrl', repoContentsUrl);
+        ctx.output('idempotent', true);
         return;
       } catch (_err) {
         // ignore
