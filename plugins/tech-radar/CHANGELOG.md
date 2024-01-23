@@ -1,5 +1,27 @@
 # @backstage/plugin-tech-radar
 
+## 0.6.13-next.0
+
+### Patch Changes
+
+- 912ca7b: Use `convertLegacyRouteRefs` to define routes in `/alpha` export plugin.
+- Updated dependencies
+  - @backstage/core-compat-api@0.1.2-next.0
+  - @backstage/frontend-plugin-api@0.5.1-next.0
+  - @backstage/core-components@0.13.10
+  - @backstage/core-plugin-api@1.8.2
+
+## 0.6.12
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/core-compat-api@0.1.1
+  - @backstage/frontend-plugin-api@0.5.0
+  - @backstage/core-components@0.13.10
+  - @backstage/core-plugin-api@1.8.2
+
 ## 0.6.12-next.2
 
 ### Patch Changes

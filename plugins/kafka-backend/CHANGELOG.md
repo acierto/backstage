@@ -1,5 +1,26 @@
 # @backstage/plugin-kafka-backend
 
+## 0.3.8-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 0.3.7
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/backend-plugin-api@0.6.9
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
 ## 0.3.7-next.2
 
 ### Patch Changes

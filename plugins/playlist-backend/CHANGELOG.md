@@ -1,5 +1,38 @@
 # @backstage/plugin-playlist-backend
 
+## 0.3.14-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/catalog-client@1.6.0-next.0
+  - @backstage/plugin-auth-node@0.4.4-next.0
+  - @backstage/plugin-permission-node@0.7.21-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/plugin-permission-common@0.7.12
+  - @backstage/plugin-playlist-common@0.1.14
+
+## 0.3.13
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/catalog-client@1.5.2
+  - @backstage/backend-plugin-api@0.6.9
+  - @backstage/plugin-permission-common@0.7.12
+  - @backstage/plugin-permission-node@0.7.20
+  - @backstage/plugin-auth-node@0.4.3
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/plugin-playlist-common@0.1.14
+
 ## 0.3.13-next.2
 
 ### Patch Changes

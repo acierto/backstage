@@ -1,5 +1,24 @@
 # @backstage/plugin-periskop-backend
 
+## 0.2.8-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/config@1.1.1
+
+## 0.2.7
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/backend-plugin-api@0.6.9
+  - @backstage/config@1.1.1
+
 ## 0.2.7-next.2
 
 ### Patch Changes

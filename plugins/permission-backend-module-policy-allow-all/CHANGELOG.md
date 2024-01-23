@@ -1,5 +1,26 @@
 # @backstage/plugin-permission-backend-module-allow-all-policy
 
+## 0.1.7-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-auth-node@0.4.4-next.0
+  - @backstage/plugin-permission-node@0.7.21-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/plugin-permission-common@0.7.12
+
+## 0.1.6
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-plugin-api@0.6.9
+  - @backstage/plugin-permission-common@0.7.12
+  - @backstage/plugin-permission-node@0.7.20
+  - @backstage/plugin-auth-node@0.4.3
+
 ## 0.1.6-next.2
 
 ### Patch Changes

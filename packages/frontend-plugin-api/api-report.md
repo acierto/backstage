@@ -687,6 +687,39 @@ export function createRouteRef<
       }
 >;
 
+// @public
+export function createRouterExtension<
+  TConfig extends {},
+  TInputs extends AnyExtensionInputMap,
+>(options: {
+  namespace?: string;
+  name?: string;
+  attachTo?: {
+    id: string;
+    input: string;
+  };
+  configSchema?: PortableSchema<TConfig>;
+  disabled?: boolean;
+  inputs?: TInputs;
+  Component: ComponentType<
+    PropsWithChildren<{
+      inputs: Expand<ResolvedExtensionInputs<TInputs>>;
+      config: TConfig;
+    }>
+  >;
+}): ExtensionDefinition<TConfig>;
+
+// @public (undocumented)
+export namespace createRouterExtension {
+  const // (undocumented)
+    componentDataRef: ConfigurableExtensionDataRef<
+      React_2.ComponentType<{
+        children?: React_2.ReactNode;
+      }>,
+      {}
+    >;
+}
+
 // @public (undocumented)
 export function createSchemaFromZod<TOutput, TInput>(
   schemaCreator: (zImpl: typeof z) => ZodSchema<TOutput, ZodTypeDef, TInput>,
@@ -942,6 +975,17 @@ export type IconComponent = ComponentType<
       fontSize?: 'medium' | 'large' | 'small' | 'inherit';
     }
 >;
+
+// @public
+export interface IconsApi {
+  // (undocumented)
+  getIcon(key: string): IconComponent | undefined;
+  // (undocumented)
+  listIconKeys(): string[];
+}
+
+// @public
+export const iconsApiRef: ApiRef<IconsApi>;
 
 export { IdentityApi };
 

@@ -1,5 +1,26 @@
 # @backstage/catalog-client
 
+## 1.6.0-next.0
+
+### Minor Changes
+
+- 04907c3: Updates the OpenAPI specification title to plugin ID instead of package name.
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/catalog-model@1.4.3
+  - @backstage/errors@1.2.3
+
+## 1.5.2
+
+### Patch Changes
+
+- 883782e: Fix a bug in `getLocationByRef` that led to invalid backend calls
+- Updated dependencies
+  - @backstage/catalog-model@1.4.3
+  - @backstage/errors@1.2.3
+
 ## 1.5.2-next.0
 
 ### Patch Changes

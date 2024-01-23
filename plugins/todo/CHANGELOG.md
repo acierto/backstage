@@ -1,5 +1,28 @@
 # @backstage/plugin-todo
 
+## 0.2.34-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-react@1.9.4-next.0
+  - @backstage/core-components@0.13.10
+  - @backstage/catalog-model@1.4.3
+  - @backstage/core-plugin-api@1.8.2
+  - @backstage/errors@1.2.3
+
+## 0.2.33
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/core-components@0.13.10
+  - @backstage/core-plugin-api@1.8.2
+  - @backstage/plugin-catalog-react@1.9.3
+  - @backstage/catalog-model@1.4.3
+  - @backstage/errors@1.2.3
+
 ## 0.2.33-next.2
 
 ### Patch Changes

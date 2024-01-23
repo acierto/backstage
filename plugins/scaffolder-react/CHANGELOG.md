@@ -1,5 +1,53 @@
 # @backstage/plugin-scaffolder-react
 
+## 1.8.0-next.0
+
+### Minor Changes
+
+- c56f1a2: Remove the old legacy exports from `/alpha`
+- 11b9a08: Introduced the first version of recoverable tasks.
+
+### Patch Changes
+
+- 0b0c6b6: Allow defining default output text to be shown
+- 6a74ffd: Updated dependency `@rjsf/utils` to `5.16.1`.
+  Updated dependency `@rjsf/core` to `5.16.1`.
+  Updated dependency `@rjsf/material-ui` to `5.16.1`.
+  Updated dependency `@rjsf/validator-ajv8` to `5.16.1`.
+- Updated dependencies
+  - @backstage/plugin-catalog-react@1.9.4-next.0
+  - @backstage/catalog-client@1.6.0-next.0
+  - @backstage/plugin-scaffolder-common@1.5.0-next.0
+  - @backstage/core-components@0.13.10
+  - @backstage/catalog-model@1.4.3
+  - @backstage/core-plugin-api@1.8.2
+  - @backstage/theme@0.5.0
+  - @backstage/types@1.1.1
+  - @backstage/version-bridge@1.0.7
+
+## 1.7.1
+
+### Patch Changes
+
+- c28f281: Scaffolder form now shows a list of errors at the top of the form.
+- 0b9ce2b: Fix for a step with no properties
+- 98ac5ab: Updated dependency `@rjsf/utils` to `5.15.1`.
+  Updated dependency `@rjsf/core` to `5.15.1`.
+  Updated dependency `@rjsf/material-ui` to `5.15.1`.
+  Updated dependency `@rjsf/validator-ajv8` to `5.15.1`.
+- 4016f21: Remove some unused dependencies
+- d16f85f: Show first scaffolder output text by default
+- Updated dependencies
+  - @backstage/core-components@0.13.10
+  - @backstage/plugin-scaffolder-common@1.4.5
+  - @backstage/core-plugin-api@1.8.2
+  - @backstage/catalog-client@1.5.2
+  - @backstage/plugin-catalog-react@1.9.3
+  - @backstage/catalog-model@1.4.3
+  - @backstage/theme@0.5.0
+  - @backstage/types@1.1.1
+  - @backstage/version-bridge@1.0.7
+
 ## 1.7.1-next.2
 
 ### Patch Changes

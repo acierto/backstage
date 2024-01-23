@@ -1,5 +1,41 @@
 # @backstage/backend-app-api
 
+## 0.5.11-next.0
+
+### Patch Changes
+
+- e0c18ef: Include the extension point ID and the module ID in the backend init error message.
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/backend-tasks@0.5.15-next.0
+  - @backstage/cli-node@0.2.2
+  - @backstage/config-loader@1.6.1
+  - @backstage/plugin-auth-node@0.4.4-next.0
+  - @backstage/plugin-permission-node@0.7.21-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
+## 0.5.10
+
+### Patch Changes
+
+- 516fd3e: Updated README to reflect release status
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/config-loader@1.6.1
+  - @backstage/cli-node@0.2.2
+  - @backstage/backend-plugin-api@0.6.9
+  - @backstage/plugin-permission-node@0.7.20
+  - @backstage/backend-tasks@0.5.14
+  - @backstage/plugin-auth-node@0.4.3
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
 ## 0.5.10-next.2
 
 ### Patch Changes

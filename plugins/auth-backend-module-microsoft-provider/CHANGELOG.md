@@ -1,5 +1,24 @@
 # @backstage/plugin-auth-backend-module-microsoft-provider
 
+## 0.1.5-next.0
+
+### Patch Changes
+
+- 1ff2684: Added the possibility to use custom scopes for performing login with Microsoft EntraID.
+- Updated dependencies
+  - @backstage/plugin-auth-node@0.4.4-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+
+## 0.1.4
+
+### Patch Changes
+
+- 928efbc: Deprecated the `authModuleMicrosoftProvider` export. A default export is now available and should be used like this in your backend: `backend.add(import('@backstage/plugin-auth-backend-module-microsoft-provider'));`
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-plugin-api@0.6.9
+  - @backstage/plugin-auth-node@0.4.3
+
 ## 0.1.4-next.2
 
 ### Patch Changes
