@@ -20,16 +20,26 @@ import { TokenIssuer } from './types';
 import { AuthService } from '@backstage/backend-plugin-api';
 import { decodeJwt } from 'jose';
 import { AuthenticationError, InputError } from '@backstage/errors';
+import { Knex } from 'knex';
+import { Request } from 'express';
+import DefaultOAuthSessionManager from '../lib/oauth/OAuthSessionManager';
+
+type UserInfo = {
+  sub: string;
+  ent: string[];
+};
 
 export function bindOidcRouter(
   targetRouter: express.Router,
   options: {
-    baseUrl: string;
     auth: AuthService;
+    baseUrl: string;
+    knex: Knex;
     tokenIssuer: TokenIssuer;
   },
 ) {
-  const { baseUrl, auth, tokenIssuer } = options;
+  const { baseUrl, auth, tokenIssuer, knex } = options;
+  const sessionManager = new DefaultOAuthSessionManager(knex);
 
   const router = Router();
   targetRouter.use(router);
@@ -59,23 +69,7 @@ export function bindOidcRouter(
     grant_types_supported: [],
   };
 
-  router.get('/.well-known/openid-configuration', (_req, res) => {
-    res.json(config);
-  });
-
-  router.get('/.well-known/jwks.json', async (_req, res) => {
-    const { keys } = await tokenIssuer.listPublicKeys();
-    res.json({ keys });
-  });
-
-  router.get('/v1/token', (_req, res) => {
-    res.status(501).send('Not Implemented');
-  });
-
-  // This endpoint doesn't use the regular HttpAuthService, since the contract
-  // is specifically for the header to be communicated in the Authorization
-  // header, regardless of token type
-  router.get('/v1/userinfo', async (req, res) => {
+  const getUserInfo = async (req: Request): Promise<UserInfo> => {
     const matches = req.headers.authorization?.match(/^Bearer[ ]+(\S+)$/i);
     const token = matches?.[1];
     if (!token) {
@@ -105,7 +99,45 @@ export function bindOidcRouter(
         'Invalid user token, ownership entity refs must be an array of strings',
       );
     }
+    return { sub: userEntityRef, ent: ownershipEntityRefs };
+  };
 
-    res.json({ sub: userEntityRef, ent: ownershipEntityRefs });
+  router.get('/.well-known/openid-configuration', (_req, res) => {
+    res.json(config);
+  });
+
+  router.get('/.well-known/jwks.json', async (_req, res) => {
+    const { keys } = await tokenIssuer.listPublicKeys();
+    res.json({ keys });
+  });
+
+  router.get('/v1/token', (_req, res) => {
+    res.status(501).send('Not Implemented');
+  });
+
+  router.get('/v1/oauth/session', async (req, res) => {
+    const userInfo = await getUserInfo(req);
+    const session = await sessionManager.getSession(userInfo.sub);
+    res.status(200).send({ session, status: 'ok' });
+  });
+
+  router.put('/v1/oauth/session', async (req, res) => {
+    const userInfo = await getUserInfo(req);
+    await sessionManager.updateSession(userInfo.sub, req.body.session);
+    res.status(200).send({ status: 'ok' });
+  });
+
+  router.delete('/v1/oauth/session', async (req, res) => {
+    const userInfo = await getUserInfo(req);
+    await sessionManager.deleteSession(userInfo.sub);
+    res.status(200).send({ status: 'ok' });
+  });
+
+  // This endpoint doesn't use the regular HttpAuthService, since the contract
+  // is specifically for the header to be communicated in the Authorization
+  // header, regardless of token type
+  router.get('/v1/userinfo', async (req, res) => {
+    const userInfo = await getUserInfo(req);
+    res.json(userInfo);
   });
 }

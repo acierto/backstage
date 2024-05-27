@@ -64,6 +64,10 @@ export class RefreshingAuthSessionManager<T> implements SessionManager<T> {
   }
 
   async getSession(options: GetSessionOptions): Promise<T | undefined> {
+    if (!this.currentSession) {
+      this.currentSession = await this.connector.getCachedSession();
+    }
+
     if (
       this.helper.sessionExistsAndHasScope(this.currentSession, options.scopes)
     ) {

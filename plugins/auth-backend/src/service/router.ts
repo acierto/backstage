@@ -110,6 +110,8 @@ export async function createRouter(
   }
 
   const secret = config.getOptionalString('auth.session.secret');
+  const knex = await authDb.get();
+
   if (secret) {
     router.use(cookieParser(secret));
     const enforceCookieSSL = authUrl.startsWith('https');
@@ -122,7 +124,7 @@ export async function createRouter(
         cookie: { secure: enforceCookieSSL ? 'auto' : false },
         store: new KnexSessionStore({
           createtable: false,
-          knex: await authDb.get(),
+          knex,
         }),
       }),
     );
@@ -156,6 +158,7 @@ export async function createRouter(
     auth,
     tokenIssuer,
     baseUrl: authUrl,
+    knex,
   });
 
   // Gives a more helpful error message than a plain 404

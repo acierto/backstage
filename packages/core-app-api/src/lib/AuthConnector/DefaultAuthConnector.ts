@@ -65,6 +65,13 @@ function defaultJoinScopes(scopes: Set<string>) {
   return [...scopes].join(' ');
 }
 
+const commonInitRequest: RequestInit = {
+  headers: {
+    'x-requested-with': 'XMLHttpRequest',
+  },
+  credentials: 'include',
+};
+
 /**
  * DefaultAuthConnector is the default auth connector in Backstage. It talks to the
  * backend auth plugin through the standardized API, and requests user permission
@@ -123,6 +130,54 @@ export class DefaultAuthConnector<AuthSession>
     this.popupOptions = popupOptions;
   }
 
+  async getCachedSession(): Promise<AuthSession | undefined> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('auth');
+    const res = await fetch(
+      `${baseUrl}/v1/oauth/session`,
+      commonInitRequest,
+    ).catch(error => {
+      throw new Error(`Fetch existing session has failed, ${error}`);
+    });
+
+    if (!res.ok) {
+      return undefined;
+    }
+
+    return res.json();
+  }
+
+  private async updateCachedSession(session: AuthSession): Promise<void> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('auth');
+    const res = await fetch(`${baseUrl}/v1/oauth/session`, {
+      method: 'POST',
+      ...commonInitRequest,
+      body: JSON.stringify({
+        session,
+      }),
+    }).catch(error => {
+      throw new Error(`Updating existing session has failed, ${error}`);
+    });
+
+    if (!res.ok) {
+      return undefined;
+    }
+
+    return res.json();
+  }
+
+  private async removeCachedSession(): Promise<void> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('auth');
+    const res = await fetch(`${baseUrl}/v1/oauth/session`, {
+      method: 'DELETE',
+    }).catch(error => {
+      throw new Error(`Removing existing session has failed, ${error}`);
+    });
+
+    if (!res.ok) {
+      throw new Error(`Removing existing session has failed, ${res.status}`);
+    }
+  }
+
   async createSession(options: CreateSessionOptions): Promise<AuthSession> {
     if (options.instantPopup) {
       if (this.enableExperimentalRedirectFlow) {
@@ -130,7 +185,9 @@ export class DefaultAuthConnector<AuthSession>
       }
       return this.showPopup(options.scopes);
     }
-    return this.authRequester(options.scopes);
+    const session = await this.authRequester(options.scopes);
+    await this.updateCachedSession(session);
+    return session;
   }
 
   async refreshSession(scopes?: Set<string>): Promise<any> {
@@ -139,12 +196,7 @@ export class DefaultAuthConnector<AuthSession>
         optional: true,
         ...(scopes && { scope: this.joinScopesFunc(scopes) }),
       }),
-      {
-        headers: {
-          'x-requested-with': 'XMLHttpRequest',
-        },
-        credentials: 'include',
-      },
+      commonInitRequest,
     ).catch(error => {
       throw new Error(`Auth refresh request failed, ${error}`);
     });
@@ -166,16 +218,15 @@ export class DefaultAuthConnector<AuthSession>
       }
       throw error;
     }
-    return await this.sessionTransform(authInfo);
+    const session = await this.sessionTransform(authInfo);
+    await this.updateCachedSession(session);
+    return session;
   }
 
   async removeSession(): Promise<void> {
     const res = await fetch(await this.buildUrl('/logout'), {
       method: 'POST',
-      headers: {
-        'x-requested-with': 'XMLHttpRequest',
-      },
-      credentials: 'include',
+      ...commonInitRequest,
     }).catch(error => {
       throw new Error(`Logout request failed, ${error}`);
     });
@@ -185,6 +236,7 @@ export class DefaultAuthConnector<AuthSession>
       error.status = res.status;
       throw error;
     }
+    await this.removeCachedSession();
   }
 
   private async showPopup(scopes: Set<string>): Promise<AuthSession> {

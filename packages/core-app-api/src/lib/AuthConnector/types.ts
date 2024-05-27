@@ -24,6 +24,7 @@ export type CreateSessionOptions = {
  * by for example communicating with a backend or interacting with the user.
  */
 export type AuthConnector<AuthSession> = {
+  getCachedSession(): Promise<AuthSession | undefined>;
   createSession(options: CreateSessionOptions): Promise<AuthSession>;
   refreshSession(scopes?: Set<string>): Promise<AuthSession>;
   removeSession(): Promise<void>;
