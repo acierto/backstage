@@ -17,11 +17,12 @@ import { BackendFeature } from '@backstage/backend-plugin-api';
 import { BitbucketCloudIntegration } from '@backstage/integration';
 import { BitbucketIntegration } from '@backstage/integration';
 import { BitbucketServerIntegration } from '@backstage/integration';
-import { CacheService as CacheClient } from '@backstage/backend-plugin-api';
-import { CacheServiceOptions as CacheClientOptions } from '@backstage/backend-plugin-api';
-import { CacheServiceSetOptions as CacheClientSetOptions } from '@backstage/backend-plugin-api';
+import { CacheService } from '@backstage/backend-plugin-api';
+import { CacheServiceOptions } from '@backstage/backend-plugin-api';
+import type { CacheServiceSetOptions } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import cors from 'cors';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 import Docker from 'dockerode';
 import { ErrorRequestHandler } from 'express';
 import express from 'express';
@@ -35,6 +36,7 @@ import { HostDiscovery as HostDiscovery_2 } from '@backstage/backend-app-api';
 import { HttpAuthService } from '@backstage/backend-plugin-api';
 import { IdentityService } from '@backstage/backend-plugin-api';
 import { isChildPath as isChildPath_2 } from '@backstage/backend-plugin-api';
+import { isDatabaseConflictError as isDatabaseConflictError_2 } from '@backstage/backend-plugin-api';
 import { KubeConfig } from '@kubernetes/client-node';
 import { LifecycleService } from '@backstage/backend-plugin-api';
 import { LoadConfigOptionsRemote } from '@backstage/config-loader';
@@ -43,7 +45,6 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import { MergeResult } from 'isomorphic-git';
 import { PermissionsService } from '@backstage/backend-plugin-api';
 import { DatabaseService as PluginDatabaseManager } from '@backstage/backend-plugin-api';
-import { DiscoveryService as PluginEndpointDiscovery } from '@backstage/backend-plugin-api';
 import { PluginMetadataService } from '@backstage/backend-plugin-api';
 import { PushResult } from 'isomorphic-git';
 import { Readable } from 'stream';
@@ -192,18 +193,26 @@ export class BitbucketUrlReader implements UrlReader {
   toString(): string;
 }
 
-export { CacheClient };
+// @public @deprecated (undocumented)
+export type CacheClient = CacheService;
 
-export { CacheClientOptions };
+// @public @deprecated (undocumented)
+export type CacheClientOptions = CacheServiceOptions;
 
-export { CacheClientSetOptions };
+// @public @deprecated (undocumented)
+export type CacheClientSetOptions = CacheServiceSetOptions;
 
 // @public
 export class CacheManager {
-  forPlugin(pluginId: string): PluginCacheManager;
+  forPlugin(pluginId: string): {
+    getClient(options?: CacheServiceOptions): CacheService;
+  };
   static fromConfig(
     config: Config,
-    options?: CacheManagerOptions,
+    options?: {
+      logger?: LoggerService;
+      onError?: (err: Error) => void;
+    },
   ): CacheManager;
 }
 
@@ -213,12 +222,12 @@ export type CacheManagerOptions = {
   onError?: (err: Error) => void;
 };
 
-// @public (undocumented)
-export function cacheToPluginCacheManager(
-  cache: CacheClient,
-): PluginCacheManager;
-
 // @public
+export function cacheToPluginCacheManager(cache: CacheService): {
+  getClient(options?: CacheServiceOptions): CacheService;
+};
+
+// @public @deprecated
 export const coloredFormat: winston.Logform.Format;
 
 // @public
@@ -259,13 +268,13 @@ export function createLegacyAuthAdapters<
       : {}),
 >(options: TOptions): TAdapters;
 
-// @public
+// @public @deprecated
 export function createRootLogger(
   options?: winston.LoggerOptions,
   env?: NodeJS.ProcessEnv,
 ): winston.Logger;
 
-// @public
+// @public @deprecated
 export function createServiceBuilder(_module: NodeModule): ServiceBuilder;
 
 // @public
@@ -309,7 +318,7 @@ export function dropDatabase(
   ...databaseNames: string[]
 ): Promise<void>;
 
-// @public
+// @public @deprecated
 export function errorHandler(
   options?: ErrorHandlerOptions,
 ): ErrorRequestHandler;
@@ -366,10 +375,10 @@ export class GerritUrlReader implements UrlReader {
   toString(): string;
 }
 
-// @public
+// @public @deprecated
 export function getRootLogger(): winston.Logger;
 
-// @public
+// @public @deprecated
 export function getVoidLogger(): winston.Logger;
 
 // @public @deprecated
@@ -532,14 +541,14 @@ export class HarnessUrlReader implements UrlReader {
   toString(): string;
 }
 
-// @public
+// @public @deprecated
 export const HostDiscovery: typeof HostDiscovery_2;
 
 // @public @deprecated (undocumented)
 export const isChildPath: typeof isChildPath_2;
 
-// @public
-export function isDatabaseConflictError(e: unknown): boolean;
+// @public @deprecated (undocumented)
+export const isDatabaseConflictError: typeof isDatabaseConflictError_2;
 
 // @public
 export class KubernetesContainerRunner implements ContainerRunner {
@@ -574,10 +583,10 @@ export const legacyPlugin: (
     default: LegacyCreateRouter<
       TransformedEnv<
         {
-          cache: CacheClient;
+          cache: CacheService;
           config: RootConfigService;
           database: PluginDatabaseManager;
-          discovery: PluginEndpointDiscovery;
+          discovery: DiscoveryService;
           logger: LoggerService;
           permissions: PermissionsService;
           scheduler: SchedulerService;
@@ -587,7 +596,9 @@ export const legacyPlugin: (
         },
         {
           logger: (log: LoggerService) => Logger;
-          cache: (cache: CacheClient) => PluginCacheManager;
+          cache: (cache: CacheService) => {
+            getClient(options?: CacheServiceOptions | undefined): CacheService;
+          };
         }
       >
     >;
@@ -599,7 +610,7 @@ export type LegacyRootDatabaseService = {
   forPlugin(pluginId: string): PluginDatabaseManager;
 };
 
-// @public
+// @public @deprecated
 export function loadBackendConfig(options: {
   logger: LoggerService;
   remote?: LoadConfigOptionsRemote;
@@ -638,12 +649,13 @@ export function notFoundHandler(): RequestHandler;
 // @public (undocumented)
 export interface PluginCacheManager {
   // (undocumented)
-  getClient(options?: CacheClientOptions): CacheClient;
+  getClient(options?: CacheServiceOptions): CacheService;
 }
 
 export { PluginDatabaseManager };
 
-export { PluginEndpointDiscovery };
+// @public @deprecated (undocumented)
+export type PluginEndpointDiscovery = DiscoveryService;
 
 // @public
 export interface PullOptions {
@@ -733,7 +745,7 @@ export function redactWinstonLogLine(
   info: winston.Logform.TransformableInfo,
 ): winston.Logform.TransformableInfo;
 
-// @public
+// @public @deprecated
 export function requestLoggingHandler(logger?: LoggerService): RequestHandler;
 
 // @public
@@ -815,7 +827,7 @@ export type ServiceBuilder = {
   start(): Promise<Server>;
 };
 
-// @public
+// @public @deprecated
 export function setRootLogger(newLogger: winston.Logger): void;
 
 // @public @deprecated
