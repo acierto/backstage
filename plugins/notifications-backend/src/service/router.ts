@@ -463,7 +463,7 @@ export async function createRouter(
       let users = [];
 
       const credentials = await httpAuth.credentials(req, {
-        allow: ['service'],
+        allow: ['none'],
       });
 
       const { title } = payload;
@@ -473,7 +473,7 @@ export async function createRouter(
         throw new InputError(`Invalid notification request received`);
       }
 
-      const origin = credentials.principal.subject;
+      const origin = credentials.principal.subject ?? 'personal';
       const baseNotification = {
         payload: {
           ...payload,

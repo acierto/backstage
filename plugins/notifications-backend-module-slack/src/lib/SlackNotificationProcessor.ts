@@ -84,7 +84,9 @@ export class SlackNotificationProcessor implements NotificationProcessor {
       limit: 10,
       interval: durationToMilliseconds({ minutes: 1 }),
     });
-    const throttled = throttle(opts => sendSlackNotification(opts));
+    const throttled = throttle((opts: SlackNotificationOptions) =>
+      sendSlackNotification(opts),
+    );
     this.sendSlackNotifications = async (opts: SlackNotificationOptions[]) =>
       await Promise.all(opts.map(message => throttled(message)));
   }

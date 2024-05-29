@@ -3,6 +3,8 @@ kind: Group
 metadata:
   name: team-b
   description: Team B
+  annotations:
+    slack.com/notifications: https://bolcom.enterprise.slack.com/archives/C07558QET63
 spec:
   type: team
   profile:
@@ -21,6 +23,16 @@ spec:
     displayName: Amelia Park
     email: amelia-park@example.com
     picture: https://api.dicebear.com/7.x/avataaars/svg?seed=Gizmo&backgroundColor=transparent
+  memberOf: [team-b]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: acierto
+spec:
+  profile:
+    displayName: Bogdan Nechyporenko
+    email: bnechyporenko@bol.com
   memberOf: [team-b]
 ---
 apiVersion: backstage.io/v1alpha1
