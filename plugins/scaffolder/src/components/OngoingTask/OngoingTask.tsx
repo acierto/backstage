@@ -240,7 +240,7 @@ export const OngoingTask = (props: {
                     className={classes.cancelButton}
                     disabled={
                       !cancelEnabled ||
-                      cancelStatus !== 'not-executed' ||
+                      (cancelStatus !== 'not-executed' && !isRetryableTask) ||
                       !canCancelTask
                     }
                     onClick={triggerCancel}
