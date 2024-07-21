@@ -39,8 +39,10 @@ import {
 
 type ContextMenuProps = {
   cancelEnabled?: boolean;
+  canRetry: boolean;
   logsVisible?: boolean;
   buttonBarVisible?: boolean;
+  onRetry?: () => void;
   onStartOver?: () => void;
   onToggleLogs?: (state: boolean) => void;
   onToggleButtonBar?: (state: boolean) => void;
@@ -56,8 +58,10 @@ const useStyles = makeStyles<Theme, { fontColor: string }>(() => ({
 export const ContextMenu = (props: ContextMenuProps) => {
   const {
     cancelEnabled,
+    canRetry,
     logsVisible,
     buttonBarVisible,
+    onRetry,
     onStartOver,
     onToggleLogs,
     onToggleButtonBar,
@@ -137,6 +141,16 @@ export const ContextMenu = (props: ContextMenuProps) => {
               <Retry fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Start Over" />
+          </MenuItem>
+          <MenuItem
+            onClick={onRetry}
+            disabled={cancelEnabled || !canRetry}
+            data-testid="retry-task"
+          >
+            <ListItemIcon>
+              <Retry fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Retry" />
           </MenuItem>
           <MenuItem
             onClick={cancel}
